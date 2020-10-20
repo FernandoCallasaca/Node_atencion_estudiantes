@@ -9,7 +9,6 @@ const dbGeneral = require('./dal/general')
 const app = express()
 const port = 3200
 
-
 app.use(bodyParser.json({ limit: '1000mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '1000mb' }));
 
@@ -36,25 +35,9 @@ app.use('/static', express.static(__dirname + '/fotos/encuesta'));
 
 
 /* General */
-app.post('/api/general/getdocente', dbGeneral.getDocente)
-app.post('/api/general/deletedocente', dbGeneral.deleteDocente)
-app.post('/api/general/savedocente', dbGeneral.saveDocente)
-app.post('/api/general/getcatalogo', dbGeneral.getCatalogo)
-app.post('/api/general/deletecatalogo', dbGeneral.deleteCatalogo)
-app.post('/api/general/savecatalogo', dbGeneral.saveCatalogo)
-app.post('/api/general/getusuario', dbGeneral.getUsuario)
-app.post('/api/general/deleteusuario', dbGeneral.deleteUsuario)
-app.post('/api/general/saveusuario', dbGeneral.saveUsuario)
-app.post('/api/general/getsoportetecnico', dbGeneral.getSoporteTecnico)
-app.post('/api/general/getequipo', dbGeneral.getEquipo)
-app.post('/api/general/deleteequipo', dbGeneral.deleteEquipo)
-app.post('/api/general/saveequipo', dbGeneral.saveEquipo)
-app.post('/api/general/getmotivosincidencia', dbGeneral.getMotivosIncidencia)
-app.post('/api/general/saveincidencia', dbGeneral.saveIncidencia)
-app.post('/api/general/getincidencias', dbGeneral.getIncidencias)
-app.post('/api/general/saveasignacion', dbGeneral.saveAsignacion)
-
-// ------------------------------------------------------------------------------------------
+app.post('/api/general/getestudiante', dbGeneral.getEstudiante)
+app.post('/api/general/deleteestudiante', dbGeneral.deleteEstudiante)
+app.post('/api/general/saveestudiante', dbGeneral.saveEstudiante)
 
 /* Seguridad */
 app.post('/api/seguridad/login', dbSeguridad.login)
