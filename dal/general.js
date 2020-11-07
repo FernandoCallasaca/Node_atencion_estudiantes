@@ -3,7 +3,7 @@ const cnx = require('../common/appsettings') // Hola Ara
 const valida = require('../common/validatoken')
 let pool = cnx.pool;
 
-// Docente
+// Estudiantes
 
 const getEstudiante = (request, response) => {
     var obj = valida.validaToken(request)
@@ -24,13 +24,14 @@ const deleteEstudiante = (request, response) => {
     var obj = valida.validaToken(request)
     if (obj.estado) {
         
-        let id_estudiante=request.body.id_estudiante;
+        let id_estudiante = request.body.id_estudiante;
 
-        let cadena = 'do $$ \n\r' +
-        '   begin \n\r' +
-        '       update estudiante set borrado = id_estudiante where id_estudiante=\'' + id_estudiante + '\'; \n\r' +
-        '   end \n\r' +
-        '$$';
+        let cadena = `do $$
+            begin        
+                update estudiante set borrado = ${id_estudiante} where id_estudiante = ${id_estudiante};
+            end
+        $$`;
+        console.log(cadena);
         pool.query(cadena,
             (error, results) => {
                 if (error) {
