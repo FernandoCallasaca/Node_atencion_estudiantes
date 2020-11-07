@@ -39,6 +39,12 @@ app.use('/static', express.static(__dirname + '/fotos/encuesta'));
 app.post('/api/general/getestudiante', dbGeneral.getEstudiante)
 app.post('/api/general/deleteestudiante', dbGeneral.deleteEstudiante)
 app.post('/api/general/saveestudiante', dbGeneral.saveEstudiante)
+app.post('/api/general/getadministrador', dbGeneral.getAdministador)
+app.post('/api/general/deleteadministrador', dbGeneral.deleteAdministrador)
+app.post('/api/general/saveadministrador', dbGeneral.saveAdministrador)
+app.post('/api/general/getusuario', dbGeneral.getUsuario)
+app.post('/api/general/deleteusuario', dbGeneral.deleteUsuario)
+app.post('/api/general/saveusuario', dbGeneral.saveUsuario)
 
 /* Seguridad */
 app.post('/api/seguridad/login', dbSeguridad.login)
