@@ -252,8 +252,39 @@ const saveUsuario = (request, response) => {
         response.status(200).json(obj)
     }
 }
-
-
+// Trámites
+const getTipoTramite = (request, response) => {
+    var obj = valida.validaToken(request)
+    if (obj.estado) {
+        pool.query('select * from tipotramite',
+            (error, results) => {
+                if (error) {
+                    response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                } else {
+                    response.status(200).json({ estado: true, mensaje: "", data: results.rows })
+                }
+            })
+    } else {
+        response.status(200).json(obj)
+    }
+}
+const getVwTramites = (request, response) => {
+    var obj = valida.validaToken(request)
+    if (obj.estado) {
+        let cadena = 'select * from vw_tramites where (id_estudiante = $1 or 0 = $1) and (id_tipo = $2 or 0 = $2)';
+        pool.query(cadena,
+            [request.body.id_estudiante, request.body.id_tipo],
+            (error, results) => {
+                if (error) {
+                    response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                } else {
+                    response.status(200).json({ estado: true, mensaje: "", data: results.rows })
+                }
+            })
+    } else {
+        response.status(200).json(obj)
+    }
+}
 
 module.exports = {
     getEstudiante,
@@ -265,4 +296,6 @@ module.exports = {
     getUsuario,
     deleteUsuario,
     saveUsuario,
+    getTipoTramite,
+    getVwTramites
 }
