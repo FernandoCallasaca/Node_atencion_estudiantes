@@ -47,6 +47,7 @@ app.post('/api/general/deleteusuario', dbGeneral.deleteUsuario)
 app.post('/api/general/saveusuario', dbGeneral.saveUsuario)
 app.post('/api/general/gettipotramite', dbGeneral.getTipoTramite)
 app.post('/api/general/getvwtramites', dbGeneral.getVwTramites)
+app.post('/api/general/getinfoestudianteusuario', dbGeneral.getInfoEstudianteUsuario)
 
 /* Seguridad */
 app.post('/api/seguridad/login', dbSeguridad.login)
