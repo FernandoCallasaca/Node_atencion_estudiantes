@@ -183,7 +183,7 @@ const saveAdministrador = (request, response) => {
 const getUsuario = (request, response) => {
     var obj = valida.validaToken(request)
     if (obj.estado) {
-        pool.query('select * from usuario',
+        pool.query('select * from usuario order by id_usuario',
             (error, results) => {
                 if (error) {
                     response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
@@ -233,7 +233,7 @@ const saveUsuario = (request, response) => {
             if (${id_usuario} != 0) then
                 update usuario set nombre = '${nombre}', contrasenia = '${contrasenia}' where id_usuario = ${id_usuario};
             else
-                insert into usuario values (default, ${nombre}, '${contrasenia}', 0);
+                insert into usuario values (default, '${nombre}', '${contrasenia}', 0);
             end if;
         end
         $$`;
