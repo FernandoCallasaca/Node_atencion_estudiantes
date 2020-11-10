@@ -5,24 +5,46 @@ const valida = require('../common/validatoken')
 let pool = cnx.pool;
 
 
-const login = (request, response) => {
-    request.body.c_password = encriptar.encriptarlogin(request.body.c_password);
-    pool.query('Select n_idseg_user, c_username, c_name, c_lastname, c_phone, c_documentid, n_idseg_role from seg_user where n_borrado = 0 and c_username = $1 and c_password = $2',
-        [request.body.c_username, request.body.c_password], (error, results) => {
-            var tokenData = {
-                username: request.body.c_username
-            }
-            var token = jwt.sign(tokenData, 'Secret Password', {
-                expiresIn: 60 * 60 * 4 // expires in 4 hours
-            })
-            response.status(200).json({ estado: true, mensaje: "", token: token })
-        
-        })
-}
-
 // const login = (request, response) => {
+//     console.log('Entro al login');
 //     request.body.c_password = encriptar.encriptarlogin(request.body.c_password);
 //     pool.query('Select n_idseg_user, c_username, c_name, c_lastname, c_phone, c_documentid, n_idseg_role from seg_user where n_borrado = 0 and c_username = $1 and c_password = $2',
+//         [request.body.c_username, request.body.c_password], (error, results) => {
+//             var tokenData = {
+//                 username: request.body.c_username
+//             }
+//             var token = jwt.sign(tokenData, 'Secret Password', {
+//                 expiresIn: 60 * 60 * 4 // expires in 4 hours
+//             })
+//             response.status(200).json({ estado: true, mensaje: "", token: token })
+        
+//         })
+// }
+
+const login = (request, response) => {
+    // request.body.c_password = encriptar.encriptarlogin(request.body.c_password);
+    pool.query('Select nombre, contrasenia, id_role from usuario where borrado = 0 and nombre = $1 and contrasenia = $2',
+        [request.body.c_username, request.body.c_password], (error, results) => {
+            if (error) {
+                response.status(200).json({ estado: false, mensaje: "error: usuario o contraseña inválidos!. "+error.stack, data: null })
+            } else {
+                if (results.rowCount > 0) {
+                    var tokenData = {
+                        username: request.body.c_username
+                    }
+                    var token = jwt.sign(tokenData, 'Secret Password', {
+                        expiresIn: 60 * 60 * 4 // expires in 4 hours
+                    })
+                    response.status(200).json({ estado: true, mensaje: "", data: results.rows[0], token: token })
+                } else {
+                    response.status(200).json({ estado: false, mensaje: "DB:usuario o contraseña inválidos!.", data: null })
+                }
+            }
+        })
+}
+// const login = (request, response) => {
+//     request.body.c_password = encriptar.encriptarlogin(request.body.c_password);
+//     pool.query('Select id_usuario, nombre, c_name, c_lastname, c_phone, c_documentid, n_idseg_role from seg_user where n_borrado = 0 and c_username = $1 and c_password = $2',
 //         [request.body.c_username, request.body.c_password], (error, results) => {
 //             if (error) {
 //                 response.status(200).json({ estado: false, mensaje: "error: usuario o contraseña inválidos!. "+error.stack, data: null })
@@ -66,7 +88,7 @@ const get = (request, response) => {
 const getrole = (request, response) => {
     var obj = valida.validaToken(request)
     if (obj.estado) {
-        pool.query('Select n_idseg_role, c_role from seg_role where n_borrado = 0',
+        pool.query('Select id_role, nombre from role',
             (error, results) => {
                 if (error) {
                     response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
