@@ -353,6 +353,54 @@ const getVwEstadoTramites = (request, response) => {
         response.status(200).json(obj)
     }
 }
+// METODOS GENERALES PARA TRAER INFORMACIÓN Y GUARDAR INFORMACIÓN SIN NECESIDAD DEL TOKEN
+const getUsuariosForRegister = (request, response) => {
+    if (true) {
+        pool.query('select * from usuario',
+            (error, results) => {
+                if (error) {
+                    response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                } else {
+                    response.status(200).json({ estado: true, mensaje: "", data: results.rows })
+                }
+            })
+    }
+}
+const saveUsuarioForRegister = (request, response) => {
+    let nombre = request.body.nombre;
+    let contrasenia = request.body.contrasenia;
+
+    let cadena = `insert into usuario values (default, '${nombre}', '${contrasenia}', 0, 1);`;
+
+    pool.query(cadena,
+        (error, results) => {
+            if (error) {
+                console.log(error);
+                response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+            } else {
+                response.status(200).json({ estado: true, mensaje: "", data: results.rows })
+            }
+        })
+}
+const saveEstudianteForRegister = (request, response) => {
+    let id_usuario = request.body.id_usuario;
+    let nombres = request.body.nombres;
+    let apellidos = request.body.apellidos;
+    let codigo = request.body.codigo;
+
+    let cadena = `insert into estudiante values (default, ${id_usuario}, '${nombres}', '${apellidos}', '${codigo}', 0);`;
+
+    pool.query(cadena,
+        (error, results) => {
+            if (error) {
+                console.log(error);
+                response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+            } else {
+                response.status(200).json({ estado: true, mensaje: "", data: results.rows })
+            }
+        })
+}
+
 module.exports = {
     getEstudiante,
     deleteEstudiante,
@@ -367,5 +415,8 @@ module.exports = {
     getVwTramites,
     getInfoEstudianteUsuario,
     getEstadosTramite,
-    getVwEstadoTramites
+    getVwEstadoTramites,
+    getUsuariosForRegister,
+    saveUsuarioForRegister,
+    saveEstudianteForRegister
 }

@@ -50,6 +50,9 @@ app.post('/api/general/getvwtramites', dbGeneral.getVwTramites)
 app.post('/api/general/getinfoestudianteusuario', dbGeneral.getInfoEstudianteUsuario)
 app.post('/api/general/getestadostramite',dbGeneral.getEstadosTramite)
 app.post('/api/general/getvwestadotramites',dbGeneral.getVwEstadoTramites)
+app.post('/api/general/getusuarioforregister',dbGeneral.getUsuariosForRegister)
+app.post('/api/general/saveusuarioforregister',dbGeneral.saveUsuarioForRegister)
+app.post('/api/general/saveestudianteforregister',dbGeneral.saveEstudianteForRegister)
 
 /* Seguridad */
 app.post('/api/seguridad/login', dbSeguridad.login)
