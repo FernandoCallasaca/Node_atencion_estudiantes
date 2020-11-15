@@ -288,7 +288,6 @@ const getVwTramites = (request, response) => {
 }
 
 const getInfoEstudianteUsuario = (request, response) => {
-    console.log(request);
     var obj = valida.validaToken(request)
     if (obj.estado) {
         let cadena = `
@@ -302,7 +301,6 @@ const getInfoEstudianteUsuario = (request, response) => {
             from estudiante es
             inner join usuario us on us.id_usuario = es.id_usuario and us.borrado = 0
         `;
-        console.log(cadena);
         pool.query(cadena,
             (error, results) => {
                 if (error) {
