@@ -268,6 +268,7 @@ const getTipoTramite = (request, response) => {
         response.status(200).json(obj)
     }
 }
+
 const getVwTramites = (request, response) => {
     var obj = valida.validaToken(request)
     if (obj.estado) {
@@ -314,6 +315,44 @@ const getInfoEstudianteUsuario = (request, response) => {
     }
 }
 
+const getEstadosTramite = (request, response) => {
+    var obj = valida.validaToken(request)
+    if (obj.estado) {
+        pool.query('select distinct estado from vw_tramites',
+            (error, results) => {
+                if (error) {
+                    response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                } else {
+                    response.status(200).json({ estado: true, mensaje: "", data: results.rows })
+                }
+            })
+    } else {
+        response.status(200).json(obj)
+    }
+}
+
+const getVwEstadoTramites = (request, response) => {
+    var obj = valida.validaToken(request)
+
+    console.log(request.body);
+    if (obj.estado) {
+        // let cadena = 'select * from vw_tramites where (id_estudiante = $1 or 0 = $1) and (id_tipo = $2 or 0 = $2)';
+        let cadena = `select * from vw_tramites where (id_estudiante = $1 or 0 = $1)  and (estado = $2 or ''= $2) and id_tipo = $3`;
+        
+        pool.query(cadena,
+            [request.body.id_estudiante, request.body.estado, request.body.id_tipo],
+            (error, results) => {
+                console.log(results);
+                if (error) {
+                    response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                } else {
+                    response.status(200).json({ estado: true, mensaje: "", data: results.rows })
+                }
+            })
+    } else {
+        response.status(200).json(obj)
+    }
+}
 module.exports = {
     getEstudiante,
     deleteEstudiante,
@@ -326,5 +365,7 @@ module.exports = {
     saveUsuario,
     getTipoTramite,
     getVwTramites,
-    getInfoEstudianteUsuario
+    getInfoEstudianteUsuario,
+    getEstadosTramite,
+    getVwEstadoTramites
 }
