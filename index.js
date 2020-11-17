@@ -6,6 +6,7 @@ var cors = require('cors');
 // Para guardar archivos en un directorio del node, tenemos que instalar estas dependencias (multer, fs)
 var multer = require('multer');
 const fs = require('fs');
+var path = require('path') // para descargar
 
 const dbSeguridad = require('./dal/seguridad')
 const dbGeneral = require('./dal/general')
@@ -71,6 +72,13 @@ app.post('/api/general/uploadfile', function (req, res) {
     });
 })
 
+app.get("/api/general/download", (req, res) => {
+    let rutaarchivo = __dirname + ruta + '/' + req.query.nombre;
+    // console.log(rutaarchivo);
+    const file = path.resolve('', rutaarchivo);
+    res.download(file);
+})
+
 /* General */
 app.post('/api/general/getestudiante', dbGeneral.getEstudiante)
 app.post('/api/general/deleteestudiante', dbGeneral.deleteEstudiante)
@@ -91,6 +99,7 @@ app.post('/api/general/saveusuarioforregister',dbGeneral.saveUsuarioForRegister)
 app.post('/api/general/saveestudianteforregister',dbGeneral.saveEstudianteForRegister)
 app.post('/api/general/savetramite',dbGeneral.saveTramite)
 app.post('/api/general/savedocumentotramite',dbGeneral.saveDocumentoTramite)
+app.post('/api/general/getdocumentos',dbGeneral.getDocumentos)
 
 /* Seguridad */
 app.post('/api/seguridad/login', dbSeguridad.login)

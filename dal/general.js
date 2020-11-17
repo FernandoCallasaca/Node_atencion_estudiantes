@@ -340,7 +340,6 @@ const getVwEstadoTramites = (request, response) => {
         pool.query(cadena,
             [request.body.id_estudiante, request.body.estado, request.body.id_tipo],
             (error, results) => {
-                console.log(results);
                 if (error) {
                     response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
                 } else {
@@ -444,6 +443,23 @@ const saveDocumentoTramite = (request, response) => {
     }
 }
 
+const getDocumentos = (request, response) => {
+    var obj = valida.validaToken(request)
+    if (obj.estado) {
+        pool.query('select * from documento',
+            (error, results) => {
+                if (error) {
+                    response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                } else {
+                    response.status(200).json({ estado: true, mensaje: "", data: results.rows })
+                }
+            })
+    } else {
+        response.status(200).json(obj)
+    }
+}
+
+
 module.exports = {
     getEstudiante,
     deleteEstudiante,
@@ -463,5 +479,6 @@ module.exports = {
     saveUsuarioForRegister,
     saveEstudianteForRegister,
     saveTramite,
-    saveDocumentoTramite
+    saveDocumentoTramite,
+    getDocumentos
 }
