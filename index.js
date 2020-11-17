@@ -3,6 +3,7 @@ const express = require('express')
 var jwt = require('jsonwebtoken')
 var bodyParser = require('body-parser')
 var cors = require('cors');
+// Para guardar archivos en un directorio del node, tenemos que instalar estas dependencias (multer, fs)
 var multer = require('multer');
 const fs = require('fs');
 
@@ -12,7 +13,8 @@ const dbGeneral = require('./dal/general')
 const app = express()
 const port = 3200
 
-const ruta = '/archivos/proyectos';
+// Creamos una ruta
+const ruta = '/archivos/documentos';
 
 app.use(bodyParser.json({ limit: '1000mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '1000mb' }));
@@ -35,6 +37,7 @@ app.get('/', (request, response) => {
     response.json({ info: 'Node.js, Express, and Postgres API' })
 })
 
+// Creamos los siguientes metodos para subir el archivo
 var storage = multer.diskStorage({
     destination: function (req, file, callback) {
         callback(null, req.query.c_ruta);
@@ -48,14 +51,12 @@ var upload = multer({ storage: storage }).single('DA');
 app.use('/static', express.static(__dirname + ruta));
 
 app.post('/api/general/uploadfile', function (req, res) {
-    let proyecto = req.query.proyecto;
-    let dir = __dirname.replace('\dal', '') + "/archivos/proyectos/" + proyecto + "/";
-    //let c_nombre = 'DA-' + Date.now() + '.' + req.query.extension;
+    let documento = req.query.documento;
+    let dir = __dirname.replace('\dal', '') + "/archivos/documentos/" + documento + "/";
     let c_nombre =   req.query.extension;
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, 0744);
     }
-
     req.query.c_ruta = dir;
     req.query.c_nombre = c_nombre;
     dir = dir + '' + c_nombre;
