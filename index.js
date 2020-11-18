@@ -103,10 +103,11 @@ app.post('/api/general/getdocumentos',dbGeneral.getDocumentos)
 
 /* Seguridad */
 app.post('/api/seguridad/login', dbSeguridad.login)
+app.post('/api/seguridad/actualizarUsuario', dbSeguridad.actualizarUsuario)
 app.post('/api/seguridad/get', dbSeguridad.get)
 app.post('/api/seguridad/getrole', dbSeguridad.getrole)
 app.post('/api/seguridad/save', dbSeguridad.save)
-app.post('/api/seguridad/resetearclave', dbSeguridad.resetearclave)
+app.post('/api/seguridad/actualizarUsuario', dbSeguridad.actualizarUsuario)
 
 
 app.listen(port, () => {

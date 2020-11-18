@@ -9,6 +9,7 @@ const login = (request, response) => {
     // request.body.c_password = encriptar.encriptarlogin(request.body.c_password);
     pool.query(`
     select
+        u.id_usuario,
         u.nombre,
         u.contrasenia,
         u.id_role,
@@ -39,6 +40,26 @@ const login = (request, response) => {
             }
         })
 }
+
+const actualizarUsuario = (request, response) => {
+    let id_usuario = request.body.id_usuario;
+    let contrasenia = request.body.contrasenia;
+    const cadena = `update usuario set contrasenia = '${contrasenia}' where id_usuario = ${id_usuario}`;
+    var obj = valida.validaToken(request)
+    if (obj.estado) {
+        pool.query(cadena,
+            (error, results) => {
+                if (error) {
+                    response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                } else {
+                    response.status(200).json({ estado: true, mensaje: "", data: results.rows })
+                }
+            })
+    } else {
+        response.status(200).json(obj)
+    }
+}
+
 
 const get = (request, response) => {
     var obj = valida.validaToken(request)
@@ -179,6 +200,7 @@ const resetearclave = (request, response) => {
 
 module.exports = {
     login,
+    actualizarUsuario,
     get,
     getrole,
     save,
