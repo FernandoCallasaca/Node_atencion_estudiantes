@@ -7,7 +7,20 @@ let pool = cnx.pool;
 
 const login = (request, response) => {
     // request.body.c_password = encriptar.encriptarlogin(request.body.c_password);
-    pool.query('Select nombre, contrasenia, id_role from usuario where borrado = 0 and nombre = $1 and contrasenia = $2',
+    pool.query(`
+    select
+        u.nombre,
+        u.contrasenia,
+        u.id_role,
+        es.nombres,
+        es.apellidos,
+        es.codigo,
+        ad.nombres nombresad,
+        ad.apellidos apellidosad
+	from usuario u
+    left join estudiante es on es.id_usuario = u.id_usuario and es.borrado = 0
+    left join administrador ad on ad.id_usuario = u.id_usuario and ad.borrado = 0
+    where u.nombre = $1 and u.contrasenia = $2 and u.borrado = 0`,
         [request.body.c_username, request.body.c_password], (error, results) => {
             if (error) {
                 response.status(200).json({ estado: false, mensaje: "error: usuario o contraseña inválidos!. "+error.stack, data: null })
