@@ -256,7 +256,7 @@ const saveUsuario = (request, response) => {
 const getTipoTramite = (request, response) => {
     var obj = valida.validaToken(request)
     if (obj.estado) {
-        pool.query('select * from tipotramite',
+        pool.query('select * from tipotramite where borrado = 0',
             (error, results) => {
                 if (error) {
                     response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
@@ -406,8 +406,8 @@ const saveTramite = (request, response) => {
         let fecha = request.body.fecha;
         let observacion = request.body.observacion;
         let cadena = `
-            insert into tramite values(default, ${id_estudiante}, ${id_tipo}, '${fecha}', 'Pendiente', 
-            '${observacion}', 0);
+            insert into tramite values(default, ${id_estudiante}, ${id_tipo}, 1, '${fecha}', 
+            '${observacion}', 1, '${fecha}', 'Por revisar',0);
         `;
         pool.query(cadena,
             (error, results) => {
