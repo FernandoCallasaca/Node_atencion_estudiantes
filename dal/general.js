@@ -459,6 +459,70 @@ const getDocumentos = (request, response) => {
     }
 }
 
+const get_tipo_tramite_estado = (request, response) => {
+    var obj = valida.validaToken(request)
+    let tipostramite = [];
+    let resultados = [];
+    let estadostramites = [];
+    let estadostramites_resultado = [];
+    let tramites = [];
+    if (obj.estado) {
+        pool.query(`
+        select distinct
+            tr.id_tipo,
+            tr.id_estudiante,
+            tp.nombre nombretipotramite
+            from tramite tr
+            inner join tipotramite tp on tp.id_tipotramite = tr.id_tipo and tp.borrado = 0
+            where id_estudiante = $1`,
+            [request.body.id_estudiante],
+            (error, results) => {
+                if (error) {
+                    response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                } else {
+                    tipostramite = results.rows;
+                    pool.query(`
+                        select distinct
+                        tr.id_estudiante,
+                        tr.id_tipo,
+                        et.id_estado_tramite,
+                        et.nombre
+                        from tramite tr
+                        inner join estado_tramite et on et.id_estado_tramite = tr.id_estado_tramite and et.borrado = 0
+                        where id_estudiante = $1`,
+                        [request.body.id_estudiante],
+                        (error, results) => {
+                            if (error) {
+                                response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                            } else {
+                                estadostramites = results.rows;
+                                pool.query(`select * from vw_tramites where id_estudiante = $1`,
+                                    [request.body.id_estudiante],
+                                    (error, results) => {
+                                        if (error) {
+                                            response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                                        } else {
+                                            tramites = results.rows;
+                                            tipostramite.forEach(tipo => {
+                                                estadostramites_resultado = [];
+                                                estadostramites.forEach(estado => {
+                                                    estado.tramites = tramites.filter(o => o.id_estado_tramite == estado.id_estado_tramite && o.id_tipo == estado.id_tipo);
+                                                    estadostramites_resultado.push(estado);
+                                                });
+                                                tipo.estadostramites = estadostramites_resultado.filter(o => o.id_tipo == tipo.id_tipo);
+                                                resultados.push(tipo);
+                                            });
+                                            response.status(200).json({ estado: true, mensaje: "", data: resultados })
+                                        }
+                                    })
+                            }
+                        })
+                }
+            })
+    } else {
+        response.status(200).json(obj)
+    }
+}
 
 module.exports = {
     getEstudiante,
@@ -480,5 +544,6 @@ module.exports = {
     saveEstudianteForRegister,
     saveTramite,
     saveDocumentoTramite,
-    getDocumentos
+    getDocumentos,
+    get_tipo_tramite_estado
 }

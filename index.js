@@ -100,6 +100,7 @@ app.post('/api/general/saveestudianteforregister',dbGeneral.saveEstudianteForReg
 app.post('/api/general/savetramite',dbGeneral.saveTramite)
 app.post('/api/general/savedocumentotramite',dbGeneral.saveDocumentoTramite)
 app.post('/api/general/getdocumentos',dbGeneral.getDocumentos)
+app.post('/api/general/getipotramiteestado',dbGeneral.get_tipo_tramite_estado)
 
 /* Seguridad */
 app.post('/api/seguridad/login', dbSeguridad.login)

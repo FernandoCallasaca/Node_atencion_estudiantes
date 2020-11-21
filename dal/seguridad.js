@@ -13,6 +13,7 @@ const login = (request, response) => {
         u.nombre,
         u.contrasenia,
         u.id_role,
+        es.id_estudiante,
         es.nombres,
         es.apellidos,
         es.codigo,
