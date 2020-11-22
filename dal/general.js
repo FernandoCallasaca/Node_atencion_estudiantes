@@ -524,6 +524,41 @@ const get_tipo_tramite_estado = (request, response) => {
     }
 }
 
+const getEstadoTramite = (request, response) => {
+    var obj = valida.validaToken(request)
+    if (obj.estado) {
+        pool.query('select * from estado_tramite where borrado = 0',
+            (error, results) => {
+                if (error) {
+                    response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                } else {
+                    response.status(200).json({ estado: true, mensaje: "", data: results.rows })
+                }
+            })
+    } else {
+        response.status(200).json(obj)
+    }
+}
+
+const setEstadoObservacionAdminTramite = (request, response) => {
+    var obj = valida.validaToken(request)
+    let id_tramite = request.body.id_tramite;
+    let id_estado_tramite = request.body.id_estado_tramite;
+    let observacionadmin = request.body.observacionadmin;
+    if (obj.estado) {
+        pool.query(`update tramite set id_estado_tramite = ${id_estado_tramite}, 
+            observacionadmin = ${observacionadmin} where id_tramite = ${id_tramite}`,
+            (error, results) => {
+                if (error) {
+                    response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                } else {
+                    response.status(200).json({ estado: true, mensaje: "", data: results.rows })
+                }
+            })
+    } else {
+        response.status(200).json(obj)
+    }
+}
 module.exports = {
     getEstudiante,
     deleteEstudiante,
@@ -545,5 +580,7 @@ module.exports = {
     saveTramite,
     saveDocumentoTramite,
     getDocumentos,
-    get_tipo_tramite_estado
+    get_tipo_tramite_estado,
+    getEstadoTramite,
+    setEstadoObservacionAdminTramite
 }
