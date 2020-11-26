@@ -582,6 +582,55 @@ const saveConsulta = (request, response) => {
         response.status(200).json(obj)
     }
 }
+
+
+const getControlEstamosTramite = (request, response) => {
+    var obj = valida.validaToken(request)
+    let tipostramite = [];
+    let resultados = [];
+    let estadostramites = [];
+    let estadostramites_resultado = [];
+    let tramites = [];
+    if (obj.estado) {
+        pool.query(`select id_tipotramite, nombre from tipotramite where borrado = 0`,
+            (error, results) => {
+                if (error) {
+                    response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                } else {
+                    tipostramite = results.rows;
+                    pool.query(`select id_estado_tramite, nombre from estado_tramite where borrado = 0`,
+                        (error, results) => {
+                            if (error) {
+                                response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                            } else {
+                                estadostramites = results.rows;
+                                pool.query(`select * from vw_tramites`,
+                                    (error, results) => {
+                                        if (error) {
+                                            response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                                        } else {
+                                            tramites = results.rows;
+                                            tipostramite.forEach(tipo => {
+                                                estadostramites_resultado = [];
+                                                estadostramites.forEach(estado => {
+                                                    estado.tramites = tramites.filter(o => o.id_estado_tramite == estado.id_estado_tramite);
+                                                    estadostramites_resultado.push(estado);
+                                                });
+                                                tipo.estadostramites = estadostramites_resultado.filter(o => o.id_tipo == tipo.id_tipo);
+                                                resultados.push(tipo);
+                                            });
+                                            response.status(200).json({ estado: true, mensaje: "", data: resultados })
+                                        }
+                                    })
+                            }
+                        })
+                }
+            })
+    } else {
+        response.status(200).json(obj)
+    }
+}
+
 module.exports = {
     getEstudiante,
     deleteEstudiante,
