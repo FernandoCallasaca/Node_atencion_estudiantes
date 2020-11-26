@@ -33,7 +33,7 @@ const getEstudiante = (request, response) => {
 const deleteEstudiante = (request, response) => {
     var obj = valida.validaToken(request)
     if (obj.estado) {
-        
+
         let id_estudiante = request.body.id_estudiante;
 
         let cadena = `do $$
@@ -120,7 +120,7 @@ const getAdministador = (request, response) => {
 const deleteAdministrador = (request, response) => {
     var obj = valida.validaToken(request)
     if (obj.estado) {
-        
+
         let id_administrador = request.body.id_administrador;
 
         let cadena = `do $$
@@ -198,7 +198,7 @@ const getUsuario = (request, response) => {
 const deleteUsuario = (request, response) => {
     var obj = valida.validaToken(request)
     if (obj.estado) {
-        
+
         let id_usuario = request.body.id_usuario;
 
         let cadena = `do $$
@@ -336,7 +336,7 @@ const getVwEstadoTramites = (request, response) => {
     if (obj.estado) {
         // let cadena = 'select * from vw_tramites where (id_estudiante = $1 or 0 = $1) and (id_tipo = $2 or 0 = $2)';
         let cadena = `select * from vw_tramites where (id_estudiante = $1 or 0 = $1)  and (estado = $2 or ''= $2) and id_tipo = $3`;
-        
+
         pool.query(cadena,
             [request.body.id_estudiante, request.body.estado, request.body.id_tipo],
             (error, results) => {
@@ -559,6 +559,29 @@ const setEstadoObservacionAdminTramite = (request, response) => {
         response.status(200).json(obj)
     }
 }
+const saveConsulta = (request, response) => {
+    var obj = valida.validaToken(request)
+    if (obj.estado) {
+        let id_estudiante = request.body.id_estudiante;
+        let asunto = request.body.asunto;
+        let mensaje = request.body.mensaje;
+        let cadena = `
+            insert into consulta values(default, ${id_estudiante} , '${asunto}' , '${mensaje}',
+            current_date,0);
+        `;
+        console.log(cadena);
+        pool.query(cadena,
+            (error, results) => {
+                if (error) {
+                    response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                } else {
+                    response.status(200).json({ estado: true, mensaje: "", data: results.rows })
+                }
+            })
+    } else {
+        response.status(200).json(obj)
+    }
+}
 module.exports = {
     getEstudiante,
     deleteEstudiante,
@@ -582,5 +605,6 @@ module.exports = {
     getDocumentos,
     get_tipo_tramite_estado,
     getEstadoTramite,
-    setEstadoObservacionAdminTramite
+    setEstadoObservacionAdminTramite,
+    saveConsulta
 }

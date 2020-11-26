@@ -103,6 +103,7 @@ app.post('/api/general/getdocumentos',dbGeneral.getDocumentos)
 app.post('/api/general/getipotramiteestado',dbGeneral.get_tipo_tramite_estado)
 app.post('/api/general/getestadotramite',dbGeneral.getEstadoTramite)
 app.post('/api/general/setestadoobservacionadmintramite',dbGeneral.setEstadoObservacionAdminTramite)
+app.post('/api/general/saveconsulta',dbGeneral.saveConsulta)
 
 /* Seguridad */
 app.post('/api/seguridad/login', dbSeguridad.login)
