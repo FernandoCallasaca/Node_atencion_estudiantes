@@ -575,7 +575,7 @@ const saveConsulta = (request, response) => {
                 if (error) {
                     response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
                 } else {
-                    response.status(200).json({ estado: true, mensaje: "", data: results.rows })
+                    response.status(200).json({ estado: true, mensaje: "", data: results.rows }) 
                 }
             })
     } else {
@@ -655,5 +655,6 @@ module.exports = {
     get_tipo_tramite_estado,
     getEstadoTramite,
     setEstadoObservacionAdminTramite,
-    saveConsulta
+    saveConsulta,
+    getControlEstamosTramite
 }
