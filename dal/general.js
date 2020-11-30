@@ -631,6 +631,35 @@ const getControlEstamosTramite = (request, response) => {
     }
 }
 
+const getConsultas = (request, response) => {
+    var obj = valida.validaToken(request)
+    if (obj.estado) {
+        let id_estudiante = request.body.id_estudiante;
+        pool.query(`
+        select 
+            con.id_consulta,
+            es.id_estudiante,
+            es.nombres,
+            es.apellidos,
+            es.codigo,
+            con.asunto,
+            con.mensaje,
+            to_char(con.fecha, 'DD-Mon-YYYY') as fecha
+            from consulta con
+            inner join estudiante es on es.id_estudiante = con.id_estudiante and es.borrado = 0
+            where (es.id_estudiante = ${id_estudiante} or 0 = ${id_estudiante})`,
+            (error, results) => {
+                if (error) {
+                    response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                } else {
+                    response.status(200).json({ estado: true, mensaje: "", data: results.rows })
+                }
+            })
+    } else {
+        response.status(200).json(obj)
+    }
+}
+
 module.exports = {
     getEstudiante,
     deleteEstudiante,
@@ -656,5 +685,6 @@ module.exports = {
     getEstadoTramite,
     setEstadoObservacionAdminTramite,
     saveConsulta,
-    getControlEstamosTramite
+    getControlEstamosTramite,
+    getConsultas
 }
