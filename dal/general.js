@@ -659,6 +659,21 @@ const getConsultas = (request, response) => {
         response.status(200).json(obj)
     }
 }
+const getTramitesInformativos = (request, response) => {
+    var obj = valida.validaToken(request)
+    if (obj.estado) {
+        pool.query('select * from informacion_tramite',
+            (error, results) => {
+                if (error) {
+                    response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                } else {
+                    response.status(200).json({ estado: true, mensaje: "", data: results.rows })
+                }
+            })
+    } else {
+        response.status(200).json(obj)
+    }
+}
 
 module.exports = {
     getEstudiante,
@@ -686,5 +701,6 @@ module.exports = {
     setEstadoObservacionAdminTramite,
     saveConsulta,
     getControlEstamosTramite,
-    getConsultas
+    getConsultas,
+    getTramitesInformativos
 }
