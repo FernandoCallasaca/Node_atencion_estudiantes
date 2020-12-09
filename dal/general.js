@@ -178,7 +178,34 @@ const saveAdministrador = (request, response) => {
         response.status(200).json(obj)
     }
 }
-// Administradores
+// Secretarias(os)
+
+const getSecretaria = (request, response) => {
+    var obj = valida.validaToken(request)
+    if (obj.estado) {
+        pool.query(`
+        select
+            ad.nombres,
+            ad.apellidos,
+            ad.direccion,
+            ad.rol,
+            us.nombre usuario
+            from administrador ad
+            inner join usuario us on us.id_usuario = ad.id_usuario and us.borrado = 0
+            and ad.borrado = 0 and ad.rol = 'Secretario(a)'
+        `,
+            (error, results) => {
+                if (error) {
+                    response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                } else {
+                    response.status(200).json({ estado: true, mensaje: "", data: results.rows })
+                }
+            })
+    } else {
+        response.status(200).json(obj)
+    }
+}
+// Usuarios
 
 const getUsuario = (request, response) => {
     var obj = valida.validaToken(request)
@@ -702,5 +729,6 @@ module.exports = {
     saveConsulta,
     getControlEstamosTramite,
     getConsultas,
-    getTramitesInformativos
+    getTramitesInformativos,
+    getSecretaria
 }

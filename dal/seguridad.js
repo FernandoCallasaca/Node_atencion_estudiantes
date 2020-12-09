@@ -18,7 +18,8 @@ const login = (request, response) => {
         es.apellidos,
         es.codigo,
         ad.nombres nombresad,
-        ad.apellidos apellidosad
+        ad.apellidos apellidosad,
+        ad.rol
 	from usuario u
     left join estudiante es on es.id_usuario = u.id_usuario and es.borrado = 0
     left join administrador ad on ad.id_usuario = u.id_usuario and ad.borrado = 0
