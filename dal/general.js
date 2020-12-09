@@ -104,7 +104,7 @@ const getAdministador = (request, response) => {
             us.nombre usuario
             from administrador ad
             inner join usuario us on us.id_usuario = ad.id_usuario and us.borrado = 0
-            and ad.borrado = 0
+            and ad.borrado = 0 and ad.rol = 'Director(a)'
         `,
             (error, results) => {
                 if (error) {
