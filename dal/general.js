@@ -97,6 +97,7 @@ const getAdministador = (request, response) => {
     if (obj.estado) {
         pool.query(`
         select
+            ad.id_administrador,
             ad.nombres,
             ad.apellidos,
             ad.direccion,
@@ -185,6 +186,7 @@ const getSecretaria = (request, response) => {
     if (obj.estado) {
         pool.query(`
         select
+            ad.id_administrador,
             ad.nombres,
             ad.apellidos,
             ad.direccion,
