@@ -108,6 +108,7 @@ app.post('/api/general/saveconsulta',dbGeneral.saveConsulta)
 app.post('/api/general/getcontrolestamostramite',dbGeneral.getControlEstamosTramite)
 app.post('/api/general/getconsultas',dbGeneral.getConsultas)
 app.post('/api/general/gettramitesinformativos',dbGeneral.getTramitesInformativos)
+app.post('/api/general/getenlacessesiones',dbGeneral.getEnlacesSesiones)
 
 /* Seguridad */
 app.post('/api/seguridad/login', dbSeguridad.login)
