@@ -109,6 +109,7 @@ app.post('/api/general/getcontrolestamostramite',dbGeneral.getControlEstamosTram
 app.post('/api/general/getconsultas',dbGeneral.getConsultas)
 app.post('/api/general/gettramitesinformativos',dbGeneral.getTramitesInformativos)
 app.post('/api/general/getenlacessesiones',dbGeneral.getEnlacesSesiones)
+app.post('/api/general/gettramiteentrefechas',dbGeneral.getTramiteEntreFechas)
 
 /* Seguridad */
 app.post('/api/seguridad/login', dbSeguridad.login)

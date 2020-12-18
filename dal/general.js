@@ -144,40 +144,25 @@ const deleteAdministrador = (request, response) => {
     }
 }
 const saveAdministrador = (request, response) => {
-    var obj = valida.validaToken(request)
-    if (obj.estado) {
+    let id_usuario = request.body.id_usuario;
+    let nombres = request.body.nombres;
+    let apellidos = request.body.apellidos;
+    let direccion = request.body.direccion;
 
-        let id_administrador = request.body.id_administrador;
-        let id_usuario = request.body.id_usuario;
-        let nombres = request.body.nombres;
-        let apellidos = request.body.apellidos;
-        let direccion = request.body.direccion;
-        let rol = request.body.rol;
+    let cadena = `insert into administrador values (default, ${id_usuario},
+        '${nombres}', '${apellidos}', '${direccion}', now(), 'Secretario(a)', 0);
+        `;
 
-        let cadena = `do $$
-        begin 
-            if (${id_administrador} != 0) then
-                update estudiante set nombres = '${nombres}', apellidos = '${apellidos}', 
-                direccion = ${direccion}, rol = ${rol} where id_administrador = ${id_administrador};
-            else
-                insert into administrador values (default, ${id_usuario}, '${nombres}', '${apellidos}', ${direccion}, now(), ${rol}', 0);
-            end if;
-        end
-        $$`;
-
-        console.log(cadena)
-        pool.query(cadena,
-            (error, results) => {
-                if (error) {
-                    console.log(error);
-                    response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
-                } else {
-                    response.status(200).json({ estado: true, mensaje: "", data: results.rows })
-                }
-            })
-    } else {
-        response.status(200).json(obj)
-    }
+    console.log(cadena)
+    pool.query(cadena,
+        (error, results) => {
+            if (error) {
+                console.log(error);
+                response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+            } else {
+                response.status(200).json({ estado: true, mensaje: "", data: results.rows })
+            }
+        })
 }
 // Secretarias(os)
 
@@ -395,8 +380,9 @@ const getUsuariosForRegister = (request, response) => {
 const saveUsuarioForRegister = (request, response) => {
     let nombre = request.body.nombre;
     let contrasenia = request.body.contrasenia;
+    let role = request.body.role;
 
-    let cadena = `insert into usuario values (default, '${nombre}', '${contrasenia}', 0, 1);`;
+    let cadena = `insert into usuario values (default, '${nombre}', '${contrasenia}', 0, ${role});`;
 
     pool.query(cadena,
         (error, results) => {
@@ -718,6 +704,28 @@ const getEnlacesSesiones = (request, response) => {
         response.status(200).json(obj)
     }
 }
+
+const getTramiteEntreFechas = (request, response) => {
+    var obj = valida.validaToken(request)
+    if (obj.estado) {
+        let fechainc = request.body.fechainicio;
+        let fechafin = request.body.fechafin;
+        let tipo = request.body.id_tipo;
+        let cadena = `
+        select * from vw_tramites where fechatimestamp >= '${fechainc}' and fechatimestamp <= '${fechafin}'
+        and (id_tipo = ${tipo} or 0 = ${tipo}) and id_estado_tramite = 4;`;
+        pool.query(cadena,
+            (error, results) => {
+                if (error) {
+                    response.status(200).json({ estado: false, mensaje: "DB: error!.", data: null })
+                } else {
+                    response.status(200).json({ estado: true, mensaje: "", data: results.rows })
+                }
+            })
+    } else {
+        response.status(200).json(obj)
+    }
+}
 module.exports = {
     getEstudiante,
     deleteEstudiante,
@@ -747,5 +755,6 @@ module.exports = {
     getConsultas,
     getTramitesInformativos,
     getSecretaria,
-    getEnlacesSesiones
+    getEnlacesSesiones,
+    getTramiteEntreFechas
 }
