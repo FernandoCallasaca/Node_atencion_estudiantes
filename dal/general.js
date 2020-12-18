@@ -713,7 +713,7 @@ const getTramiteEntreFechas = (request, response) => {
         let tipo = request.body.id_tipo;
         let cadena = `
         select * from vw_tramites where fechatimestamp >= '${fechainc}' and fechatimestamp <= '${fechafin}'
-        and (id_tipo = ${tipo} or 0 = ${tipo}) and id_estado_tramite = 4;`;
+        and (id_tipo = ${tipo} or 0 = ${tipo}) and id_estado_tramite = 1;`;
         pool.query(cadena,
             (error, results) => {
                 if (error) {
